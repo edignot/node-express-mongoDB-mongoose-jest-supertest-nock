@@ -1,5 +1,7 @@
 const Quote = require('../models/quoteSchema')
 
+const fetch = require('node-fetch')
+
 exports.get_quotes = (req, res) => {
   Quote.find()
     .then((quotes) =>
@@ -12,11 +14,27 @@ exports.get_quotes = (req, res) => {
     )
 }
 
-exports.post_quote = (req, res) => {
-  const newQuote = new Quote({
-    quote: req.body.quote,
-    author: req.body.author,
-  })
+exports.post_quote = async (req, res) => {
+  let newQuote
+
+  if (req.body.quote && req.body.author) {
+    newQuote = new Quote({
+      quote: req.body.quote,
+      author: req.body.author,
+    })
+  } else {
+    await fetch('https://type.fit/api/quotes')
+      .then((response) => response.json())
+      .then((quotes) => {
+        newQuote = new Quote({
+          quote: quotes[Math.floor(Math.random() * quotes.length)].text,
+          author: quotes[Math.floor(Math.random() * quotes.length)].author,
+        })
+      })
+      .catch((error) =>
+        res.status(500).json({ message: 'Something went wrong', error }),
+      )
+  }
 
   newQuote
     .save()
@@ -45,7 +63,9 @@ exports.update_quote = async (req, res) => {
 }
 
 exports.delete_quote = async (req, res) => {
-  Quote.findByIdAndDelete(req.params.id).then(() =>
-    res.json({ message: 'Quote deleted' }),
-  )
+  Quote.findByIdAndDelete(req.params.id)
+    .then(() => res.json({ message: 'Quote deleted' }))
+    .catch((error) =>
+      res.status(404).json({ message: 'Quote not found', error }),
+    )
 }
