@@ -10,6 +10,7 @@ describe('Quote API endpoints', () => {
   beforeAll(async () => {
     await mongoose.connect('mongodb://127.0.0.1/testing', {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
     })
   })
 
@@ -88,6 +89,16 @@ describe('Quote API endpoints', () => {
     done()
   })
 
+  test(`GET | returns message if quote id doesn't exist`, async (done) => {
+    const res = await request.get(`/api/quotes/${'non existing id'}`)
+
+    expect(res.status).toBe(404)
+    expect(res.body.message).toBe('Quote not found')
+    expect(res.body.error).toBeTruthy()
+
+    done()
+  })
+
   test('PATCH | update quote by id', async (done) => {
     const quote = await Quote.findOne()
 
@@ -111,7 +122,81 @@ describe('Quote API endpoints', () => {
     done()
   })
 
+  test(`PATCH | returns message if quote id doesn't exist`, async (done) => {
+    const res = await request
+      .patch(`/api/quotes/${'non existing id'}`)
+      .send({ quote: 'updated quote', author: 'updated author' })
+
+    expect(res.status).toBe(404)
+    expect(res.body.message).toBe('Quote not found')
+    expect(res.body.error).toBeTruthy()
+
+    done()
+  })
+
   test('DELETE | delete quote by id', async (done) => {
+    const quote = await Quote.findOne()
+
+    const res = await request.delete(`/api/quotes/${quote._id}`)
+
+    expect(res.status).toBe(200)
+    expect(res.body.message).toBe('Quote deleted')
+
+    done()
+  })
+
+  test(`DELETE | returns message if quote id doesn't exist`, async (done) => {
+    const res = await request.delete(`/api/quotes/${'non existing id'}`)
+
+    expect(res.status).toBe(404)
+    expect(res.body.message).toBe('Quote not found')
+    expect(res.body.error).toBeTruthy()
+
+    done()
+  })
+
+  test(`GET | Default response if endpoint doesn't exist`, async (done) => {
+    const res = await request.get(
+      `/api/quotes/${'non existing endpoint'}/${'non existing endpoint'}`,
+    )
+
+    expect(res.status).toBe(404)
+    expect(res.body.message).toBe('Not found')
+
+    done()
+  })
+
+  test(`POST | Default response if endpoint doesn't exist`, async (done) => {
+    const res = await request
+      .post(`/api/quotes/${'non existing endpoint'}`)
+      .send({ quote: 'QUOTE', author: 'AUTHOR' })
+
+    expect(res.status).toBe(404)
+    expect(res.body.message).toBe('Not found')
+
+    done()
+  })
+
+  test(`PATCH | Default response if endpoint doesn't exist`, async (done) => {
+    const res = await request
+      .patch(
+        `/api/quotes/${'non existing endpoint'}/${'non existing endpoint'}`,
+      )
+      .send({ quote: 'updated quote', author: 'updated author' })
+
+    expect(res.status).toBe(404)
+    expect(res.body.message).toBe('Not found')
+
+    done()
+  })
+
+  test(`DELETE | Default response if endpoint doesn't exist`, async (done) => {
+    const res = await request.delete(
+      `/api/quotes/${'non existing endpoint'}/${'non existing endpoint'}`,
+    )
+    expect(res.status).toBe(404)
+    expect(res.body.message).toBe('Not found')
+
     done()
   })
 })
