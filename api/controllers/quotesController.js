@@ -15,26 +15,26 @@ exports.get_quotes = (req, res) => {
 }
 
 exports.post_quote = async (req, res) => {
-  let newQuote
+  let quote
 
   if (req.body.quote && req.body.author) {
-    newQuote = new Quote({
-      quote: req.body.quote,
+    quote = {
+      text: req.body.quote,
       author: req.body.author,
-    })
+    }
   } else {
     await fetch('https://type.fit/api/quotes')
       .then((response) => response.json())
-      .then((quotes) => {
-        newQuote = new Quote({
-          quote: quotes[Math.floor(Math.random() * quotes.length)].text,
-          author: quotes[Math.floor(Math.random() * quotes.length)].author,
-        })
-      })
-      .catch((error) =>
-        res.status(500).json({ message: 'Something went wrong', error }),
+      .then(
+        (quotes) => (quote = quotes[Math.floor(Math.random() * quotes.length)]),
       )
+      .catch((error) => console.log(error))
   }
+
+  const newQuote = new Quote({
+    quote: quote.text,
+    author: quote.author,
+  })
 
   newQuote
     .save()
