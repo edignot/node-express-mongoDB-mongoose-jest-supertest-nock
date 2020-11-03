@@ -42,7 +42,8 @@ Production
 
 `endpoints data will be updated when deployed`
 
-## Sample GET response `http://localhost:3000/api/quotes`
+## Sample response 
+- GET `http://localhost:3000/api/quotes`
 ```
 [
     {
