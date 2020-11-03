@@ -65,7 +65,7 @@ Production
 ```
 
 ## Testing
-Utilized hooks to connect to local MongoDB before all tests run and disconnect after all tests finish running. Also seed testing database with testing data before each test and delete data after each test. All endpoints are tested.
+Utilized hooks to connect to local MongoDB before all tests run and disconnect after all tests finish running. Also seed testing database with testing data before each test and delete data after each test. 
 
 ```
 beforeAll(async () => {
@@ -95,6 +95,17 @@ beforeAll(async () => {
     await mongoose.connection.close()
   })
 ```
+Utilized Nock npm package and mocked downstream API response 
+```
+  test('POST | save quote to database with external api data', async (done) => {
+    const mockedResponse = [{ text: 'mock quote', author: 'mock author' }]
+    nock('https://type.fit').get('/api/quotes').reply(200, mockedResponse)
+    ...
+  })
+```
+
+
+[All tests](https://github.com/edignot/node-express-mongoDB-mongoose-jest-supertest-nock/blob/master/api/tests/quotes.test.js) are successfully passing
 
 ```
  PASS  api/tests/quotes.test.js
