@@ -22,7 +22,7 @@
 - [Routes](https://github.com/edignot/node-express-mongoDB-mongoose-jest-supertest-nock/blob/master/api/routes/quotesRouter.js)
 - [Model](https://github.com/edignot/node-express-mongoDB-mongoose-jest-supertest-nock/blob/master/api/models/quoteSchema.js)
 - [Controller](https://github.com/edignot/node-express-mongoDB-mongoose-jest-supertest-nock/blob/master/api/controllers/quotesController.js)
-- [https://github.com/edignot/node-express-mongoDB-mongoose-jest-supertest-nock/blob/master/api/tests/quotes.test.js)
+- [Endpoint testing](https://github.com/edignot/node-express-mongoDB-mongoose-jest-supertest-nock/blob/master/api/tests/quotes.test.js)
 
 ## REST API Endpoints:
 Local Server
