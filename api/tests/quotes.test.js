@@ -75,4 +75,43 @@ describe('Quote API endpoints', () => {
 
     done()
   })
+
+  test('GET | get quote from database by id', async (done) => {
+    const quote = await Quote.findOne()
+
+    const res = await request.get(`/api/quotes/${quote._id}`)
+
+    expect(res.status).toBe(200)
+    expect(res.body.quote).toBe(quote.quote)
+    expect(res.body.author).toBe(quote.author)
+
+    done()
+  })
+
+  test('PATCH | update quote by id', async (done) => {
+    const quote = await Quote.findOne()
+
+    const res = await request
+      .patch(`/api/quotes/${quote._id}`)
+      .send({ quote: 'updated quote', author: 'updated author' })
+
+    expect(res.status).toBe(200)
+    expect(res.body.quote).toBe('updated quote')
+    expect(res.body.author).toBe('updated author')
+
+    const updatedRes = await request.get(`/api/quotes/${res.body._id}`)
+
+    expect(updatedRes.body.quote).toBe(res.body.quote)
+    expect(updatedRes.body.author).toBe(res.body.author)
+    expect(updatedRes.body._id).toBe(res.body._id)
+    expect(updatedRes.body.createdAt).toBe(res.body.createdAt)
+    expect(updatedRes.body.updatedAt).toBe(res.body.updatedAt)
+    expect(updatedRes.body.updatedAt).not.toBe(quote.updatedAt)
+
+    done()
+  })
+
+  test('DELETE | delete quote by id', async (done) => {
+    done()
+  })
 })
