@@ -1,5 +1,7 @@
 ## Express Microservice
 
+### https://apiquotesapi.herokuapp.com/api/quotes
+
 ### About
 
 :floppy_disk: This is a simple express microservice. Client can get all quotes, one quote by id, delete and update quote by id. Also clinet can post a new quote and if required fields are not provided - random quote is fetched from a downstream API
@@ -40,7 +42,16 @@ Local Server
 
 Production
 
-`endpoints data will be updated when deployed`
+`https://apiquotesapi.herokuapp.com/api/quotes`
+
+- `GET`
+- `POST`
+
+`https://apiquotesapi.herokuapp.com/api/quotes/:id`
+
+- `GET`
+- `PATCH`
+- `DELETE`
 
 ## Sample response 
 - GET `http://localhost:3000/api/quotes`
